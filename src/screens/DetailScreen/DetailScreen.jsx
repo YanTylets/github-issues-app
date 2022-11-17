@@ -27,9 +27,10 @@ const DetailScreen = ({ route }) => {
     try {
       const data = await AsyncStorage.getItem(route.params.issue.id.toString());
       if (data !== null) {
-        const commentsArray = Object.entries(JSON.parse(data)).map(
-          item => (item = { date: item[0], message: item[1] })
-        );
+        const commentsArray = Object.entries(JSON.parse(data))
+          .map(item => (item = { date: item[0], message: item[1] }))
+          .sort((a, b) => (dayjs(a.date).isAfter(dayjs(b.date)) ? 1 : -1));
+        console.log("data", data);
         console.log("commentsArray", commentsArray);
         setAllComments(commentsArray);
       }
@@ -48,6 +49,7 @@ const DetailScreen = ({ route }) => {
     const comment = {};
     comment[nowDate] = value;
     storeComment(comment);
+    getComment();
     setValue("");
   };
 

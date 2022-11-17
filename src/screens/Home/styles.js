@@ -10,6 +10,7 @@ export const styles = StyleSheet.create({
 
   listElementContiner: {
     width: "100%",
+    height: 80,
     backgroundColor: "#fff",
     marginBottom: 20,
     justifyContent: "center",
