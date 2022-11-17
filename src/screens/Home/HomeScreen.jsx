@@ -1,4 +1,4 @@
-import { Animated, FlatList, SafeAreaView, TouchableOpacity } from "react-native";
+import { Animated, SafeAreaView, TextInput, TouchableOpacity, View } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { styles } from "./styles";
 import MainText from "../../components/MainText";
@@ -7,7 +7,9 @@ import axios from "axios";
 import PropTypes from "prop-types";
 
 const HomeScreen = ({ navigation }) => {
+  const [search, setSearch] = useState("");
   const [issues, setIssues] = useState([]);
+  const [filtredIssues, setFiltredIssues] = useState("");
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
@@ -21,11 +23,25 @@ const HomeScreen = ({ navigation }) => {
       );
       console.log("response", response.data);
       setIssues([...issues, ...response.data]);
+      setFiltredIssues([...issues, ...response.data]);
       setIsLoading(false);
     } catch (error) {
       console.error(error);
       setIsLoading(false);
       setIsError(true);
+    }
+  };
+
+  const searchFilter = text => {
+    if (text) {
+      const filtredData = issues.filter(item => {
+        return item.title?.toUpperCase().indexOf(text.toUpperCase()) > -1;
+      });
+      setFiltredIssues(filtredData);
+      setSearch(text);
+    } else {
+      setFiltredIssues(issues);
+      setSearch(text);
     }
   };
 
@@ -68,18 +84,30 @@ const HomeScreen = ({ navigation }) => {
       {isError ? (
         <MainText>Error</MainText>
       ) : (
-        <Animated.FlatList
-          onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], {
-            useNativeDriver: true
-          })}
-          contentContainerStyle={{ padding: 20 }}
-          data={issues}
-          keyExtractor={item => item.number}
-          renderItem={renderItem}
-          onEndReached={loadNext}
-          onEndReachedThreshold={0.5}
-          ListFooterComponent={isLoading ? <Loader /> : null}
-        />
+        <>
+          <View>
+            <TextInput
+              style={styles.input}
+              multiline
+              onChangeText={text => searchFilter(text)}
+              value={search}
+              placeholder="Search for issue..."
+            />
+          </View>
+
+          <Animated.FlatList
+            onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], {
+              useNativeDriver: true
+            })}
+            contentContainerStyle={{ padding: 20 }}
+            data={filtredIssues}
+            keyExtractor={item => item.number}
+            renderItem={renderItem}
+            onEndReached={search ? null : loadNext}
+            onEndReachedThreshold={0.5}
+            ListFooterComponent={isLoading ? <Loader /> : null}
+          />
+        </>
       )}
     </SafeAreaView>
   );

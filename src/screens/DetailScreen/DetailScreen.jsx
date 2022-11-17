@@ -2,6 +2,7 @@ import { SafeAreaView, ScrollView, TextInput, TouchableOpacity, View } from "rea
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import MainText from "../../components/MainText";
+// import KeyboardAvoidingWrapper from "../../components/KeyboardAvoidingWrapper";
 import { styles } from "./styles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import dayjs from "dayjs";
@@ -74,7 +75,6 @@ const DetailScreen = ({ route }) => {
           {renderComments()}
         </View>
       </ScrollView>
-
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
