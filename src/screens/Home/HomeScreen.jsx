@@ -5,23 +5,23 @@ import MainText from "../../components/MainText";
 import Loader from "../../components/Loader";
 import axios from "axios";
 import PropTypes from "prop-types";
+import dayjs from "dayjs";
 
 const HomeScreen = ({ navigation }) => {
   const [search, setSearch] = useState("");
   const [issues, setIssues] = useState([]);
-  const [filtredIssues, setFiltredIssues] = useState("");
-  const [page, setPage] = useState(1);
+  const [filtredIssues, setFiltredIssues] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const scrollY = useRef(new Animated.Value(0)).current;
 
-  const getIssues = async () => {
+  const getIssues = async (page = 1) => {
     setIsLoading(true);
     try {
       const response = await axios.get(
         `https://api.github.com/repos/facebook/react-native/issues?per_page=20&page=${page}`
       );
-      console.log("response", response.data);
+      console.log("response.data.length", issues.length);
       setIssues([...issues, ...response.data]);
       setFiltredIssues([...issues, ...response.data]);
       setIsLoading(false);
@@ -46,12 +46,16 @@ const HomeScreen = ({ navigation }) => {
   };
 
   const loadNext = () => {
-    setPage(page + 1);
+    let page = 2;
+    getIssues(page);
+    page++;
   };
 
   useEffect(() => {
-    getIssues();
-  }, [page]);
+    if (filtredIssues.length === 0) {
+      getIssues();
+    }
+  }, []);
 
   const renderItem = ({ item, index }) => {
     const inputRange = [-1, 0, 100 * index, 100 * (index + 3)];
@@ -73,7 +77,14 @@ const HomeScreen = ({ navigation }) => {
       >
         <Animated.View style={[styles.listElementContiner, { transform: [{ scale }], opacity }]}>
           <MainText>{item.title}</MainText>
-          <MainText style={{ fontSize: 14 }}>{item.created_at}</MainText>
+          <View style={styles.infoContainer}>
+            <MainText style={{ fontSize: 12, color: item.state === "open" ? "green" : "red" }}>
+              {item.state}
+            </MainText>
+            <MainText style={{ fontSize: 12, color: "#9797a8" }}>
+              {dayjs(item.created_at).format("DD/MM/YYYY")}
+            </MainText>
+          </View>
         </Animated.View>
       </TouchableOpacity>
     );
@@ -85,7 +96,7 @@ const HomeScreen = ({ navigation }) => {
         <MainText>Error</MainText>
       ) : (
         <>
-          <View>
+          <View style={styles.inputContainer}>
             <TextInput
               style={styles.input}
               multiline
@@ -101,10 +112,10 @@ const HomeScreen = ({ navigation }) => {
             })}
             contentContainerStyle={{ padding: 20 }}
             data={filtredIssues}
-            keyExtractor={item => item.number}
+            keyExtractor={(item, index) => index}
             renderItem={renderItem}
             onEndReached={search ? null : loadNext}
-            onEndReachedThreshold={0.5}
+            onEndReachedThreshold={0}
             ListFooterComponent={isLoading ? <Loader /> : null}
           />
         </>

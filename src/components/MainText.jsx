@@ -20,6 +20,6 @@ export default MainText;
 const styles = StyleSheet.create({
   textStyle: {
     textAlign: "flex-start",
-    fontSize: 22
+    fontSize: 18
   }
 });

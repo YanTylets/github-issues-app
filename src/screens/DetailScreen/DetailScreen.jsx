@@ -21,7 +21,6 @@ const DetailScreen = ({ route }) => {
     } catch (e) {
       console.error(e);
     }
-    console.log("Done.");
   };
 
   const getComment = async () => {
@@ -31,14 +30,11 @@ const DetailScreen = ({ route }) => {
         const commentsArray = Object.entries(JSON.parse(data))
           .map(item => (item = { date: item[0], message: item[1] }))
           .sort((a, b) => (dayjs(a.date).isAfter(dayjs(b.date)) ? 1 : -1));
-        console.log("data", data);
-        console.log("commentsArray", commentsArray);
         setAllComments(commentsArray);
       }
     } catch (e) {
       console.error(e);
     }
-    console.log("Done.");
   };
 
   useEffect(() => {
@@ -57,9 +53,11 @@ const DetailScreen = ({ route }) => {
   const renderComments = () => {
     return allComments.map(item => {
       return (
-        <View key={item.date}>
+        <View key={item.date} style={styles.commentContainer}>
+          <MainText style={{ fontSize: 12, color: "grey", alignSelf: "flex-end" }}>
+            {dayjs(item.date).format("DD.MM.YYYY")} at {dayjs(item.date).format("HH:mm")}
+          </MainText>
           <MainText>{item.message}</MainText>
-          <MainText>{item.date}</MainText>
         </View>
       );
     });
@@ -68,12 +66,18 @@ const DetailScreen = ({ route }) => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.contentContainer}>
-        <View>
-          <MainText>{route.params.issue.title}</MainText>
-          <MainText>{route.params.issue.state}</MainText>
-          <MainText style={{ fontSize: 12 }}>{route.params.issue.body}</MainText>
-          {renderComments()}
+        <View style={styles.titleContainer}>
+          <MainText style={{ fontWeight: "bold" }}>{route.params.issue.title}</MainText>
         </View>
+        <View style={styles.stateContainer}>
+          <MainText style={{ fontWeight: "bold", color: "white" }}>
+            {route.params.issue.state}
+          </MainText>
+        </View>
+        <View style={styles.bodyContainer}>
+          <MainText style={{ fontSize: 14 }}>{route.params.issue.body}</MainText>
+        </View>
+        {renderComments()}
       </ScrollView>
       <View style={styles.inputContainer}>
         <TextInput
