@@ -22,12 +22,14 @@ export const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 20 },
     shadowOpacity: 0.4,
     shadowRadius: 40,
-    elevation: 5
+    elevation: 20
   },
   inputContainer: {
     width: "100%",
     height: 50,
     backgroundColor: "#fff",
+    alignSelf: "center",
+
     justifyContent: "center",
     alignItems: "center",
     borderBottomLeftRadius: 12,
@@ -36,7 +38,7 @@ export const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.7,
     shadowRadius: 10,
-    elevation: 5
+    elevation: 20
   },
   input: {
     width: 350,

@@ -1,7 +1,6 @@
-import { Animated, SafeAreaView, TextInput, TouchableOpacity, View } from "react-native";
+import { Animated, SafeAreaView, TextInput, TouchableOpacity, View, Text } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { styles } from "./styles";
-import MainText from "../../components/MainText";
 import Loader from "../../components/Loader";
 import axios from "axios";
 import PropTypes from "prop-types";
@@ -76,14 +75,14 @@ const HomeScreen = ({ navigation }) => {
         }}
       >
         <Animated.View style={[styles.listElementContiner, { transform: [{ scale }], opacity }]}>
-          <MainText>{item.title}</MainText>
+          <Text style={{ fontSize: 18 }}>{item.title}</Text>
           <View style={styles.infoContainer}>
-            <MainText style={{ fontSize: 12, color: item.state === "open" ? "green" : "red" }}>
+            <Text style={{ fontSize: 12, color: item.state === "open" ? "green" : "red" }}>
               {item.state}
-            </MainText>
-            <MainText style={{ fontSize: 12, color: "#9797a8" }}>
+            </Text>
+            <Text style={{ fontSize: 12, color: "#9797a8" }}>
               {dayjs(item.created_at).format("DD/MM/YYYY")}
-            </MainText>
+            </Text>
           </View>
         </Animated.View>
       </TouchableOpacity>
@@ -93,9 +92,9 @@ const HomeScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       {isError ? (
-        <MainText>Error</MainText>
+        <Text>Error</Text>
       ) : (
-        <>
+        <View>
           <View style={styles.inputContainer}>
             <TextInput
               style={styles.input}
@@ -118,7 +117,7 @@ const HomeScreen = ({ navigation }) => {
             onEndReachedThreshold={0}
             ListFooterComponent={isLoading ? <Loader /> : null}
           />
-        </>
+        </View>
       )}
     </SafeAreaView>
   );

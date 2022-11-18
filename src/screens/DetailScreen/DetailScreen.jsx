@@ -1,7 +1,6 @@
-import { SafeAreaView, ScrollView, TextInput, TouchableOpacity, View } from "react-native";
+import { SafeAreaView, ScrollView, TextInput, TouchableOpacity, View, Text } from "react-native";
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import MainText from "../../components/MainText";
 // import KeyboardAvoidingWrapper from "../../components/KeyboardAvoidingWrapper";
 import { styles } from "./styles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -54,10 +53,10 @@ const DetailScreen = ({ route }) => {
     return allComments.map(item => {
       return (
         <View key={item.date} style={styles.commentContainer}>
-          <MainText style={{ fontSize: 12, color: "grey", alignSelf: "flex-end" }}>
+          <Text style={{ fontSize: 12, color: "grey", alignSelf: "flex-end" }}>
             {dayjs(item.date).format("DD.MM.YYYY")} at {dayjs(item.date).format("HH:mm")}
-          </MainText>
-          <MainText>{item.message}</MainText>
+          </Text>
+          <Text style={{ fontSize: 18 }}>{item.message}</Text>
         </View>
       );
     });
@@ -67,15 +66,15 @@ const DetailScreen = ({ route }) => {
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.contentContainer}>
         <View style={styles.titleContainer}>
-          <MainText style={{ fontWeight: "bold" }}>{route.params.issue.title}</MainText>
+          <Text style={{ fontWeight: "bold", fontSize: 18 }}>{route.params.issue.title}</Text>
         </View>
         <View style={styles.stateContainer}>
-          <MainText style={{ fontWeight: "bold", color: "white" }}>
+          <Text style={{ fontSize: 18, fontWeight: "bold", color: "white" }}>
             {route.params.issue.state}
-          </MainText>
+          </Text>
         </View>
         <View style={styles.bodyContainer}>
-          <MainText style={{ fontSize: 14 }}>{route.params.issue.body}</MainText>
+          <Text style={{ fontSize: 14 }}>{route.params.issue.body}</Text>
         </View>
         {renderComments()}
       </ScrollView>
@@ -88,7 +87,7 @@ const DetailScreen = ({ route }) => {
           placeholder="Type comment here"
         />
         <TouchableOpacity onPress={sendComment} style={styles.button}>
-          <MainText style={{ fontSize: 16 }}>Send</MainText>
+          <Text style={{ fontSize: 16 }}>Send</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
